@@ -52,7 +52,6 @@ public class LoginFragment extends Fragment {
         }
 
         binding.button.setOnClickListener(view1 -> {
-            System.out.println(usernameED);
             String username = usernameED.getText().toString();
             String password = passwordED.getText().toString();
 
@@ -63,6 +62,7 @@ public class LoginFragment extends Fragment {
                     if (response != null) {
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putString(SharedIndexes.loggedUserNameKey, response.getName());
+                        editor.putInt(SharedIndexes.loggedUserIdKey, response.getId());
                         editor.apply();
                         Intent i = new Intent(this.getActivity(), ExercisesActivity.class);
                         startActivity(i);
@@ -85,10 +85,4 @@ public class LoginFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-    public interface VolleyUserCallBack {
-        void onSuccess(User user);
-    }
-
-
 }

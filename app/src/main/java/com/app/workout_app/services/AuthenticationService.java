@@ -48,6 +48,5 @@ public class AuthenticationService {
                 },
                 error->{});
         queue.add(request);
-
     }
 }

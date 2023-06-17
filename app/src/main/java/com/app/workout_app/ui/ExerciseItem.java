@@ -1,6 +1,8 @@
 package com.app.workout_app.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +25,8 @@ public class ExerciseItem extends Fragment {
     private StarredExercisesRepository starredExercises;
     private Integer exerciseId;
 
+    private  SharedPreferences sharedPreferences;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -37,10 +41,12 @@ public class ExerciseItem extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        sharedPreferences = this.getActivity().getSharedPreferences(SharedIndexes.loggedUserIndex, Context.MODE_PRIVATE);
+
         starredExercises = new StarredExercisesRepository(getActivity().getBaseContext());
         exerciseId = Integer.parseInt(this.getActivity().getIntent().getExtras().getString(SharedIndexes.intentExerciseId));
 
-        Cursor fetchedCursor = starredExercises.fetch(exerciseId, 10);
+        Cursor fetchedCursor = starredExercises.fetch(exerciseId, sharedPreferences.getInt(SharedIndexes.loggedUserIdKey, 0));
 
         if (fetchedCursor.getCount() == 0) {
             binding.starOn.setVisibility(View.INVISIBLE);
@@ -55,6 +61,8 @@ public class ExerciseItem extends Fragment {
             response -> {
                 binding.textviewFirstExName.setText(response.getName());
                 binding.descriptionView.setText(response.getInstructions());
+                binding.textType.setText(response.getEquipment());
+                binding.muscle.setText(response.getMuscle());
             }
         );
         binding.back.setOnClickListener(click -> {
@@ -82,11 +90,11 @@ public class ExerciseItem extends Fragment {
         if (startAdded) {
             binding.starOn.setVisibility(View.INVISIBLE);
             startAdded = false;
-            starredExercises.delete(exerciseId, 10);
+            starredExercises.delete(exerciseId, sharedPreferences.getInt(SharedIndexes.loggedUserIdKey, 0));
         } else {
             binding.starOn.setVisibility(View.VISIBLE);
             startAdded = true;
-            starredExercises.insert(exerciseId, 10);
+            starredExercises.insert(exerciseId, sharedPreferences.getInt(SharedIndexes.loggedUserIdKey, 0));
         }
 
     }

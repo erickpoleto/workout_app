@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.workout_app.ExercisesActivity;
 import com.app.workout_app.ExercisesItemActivity;
 import com.app.workout_app.adapters.ExerciseAdapter;
+import com.app.workout_app.constants.SharedIndexes;
 import com.app.workout_app.database.CreateStarredDatabase;
 import com.app.workout_app.databinding.FragmentStarredExercicesBinding;
 import com.app.workout_app.models.Exercise;
@@ -31,6 +32,7 @@ public class StarredExercisesFragment extends Fragment {
     ArrayList<Exercise> exercises = new ArrayList<>();
     private FragmentStarredExercicesBinding binding;
     private StarredExercisesRepository starredExercisesRepository;
+    private  SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView(
@@ -45,6 +47,7 @@ public class StarredExercisesFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        sharedPreferences = this.getActivity().getSharedPreferences(SharedIndexes.loggedUserIndex, Context.MODE_PRIVATE);
 
         RecyclerView recyclerView = binding.recyclerView;
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity().getApplicationContext());
@@ -53,11 +56,11 @@ public class StarredExercisesFragment extends Fragment {
         new ExerciseService().fetch(this.getActivity().getApplicationContext(), response -> {
             starredExercisesRepository = new StarredExercisesRepository(getActivity().getBaseContext());
 
-            Cursor starredExercises = starredExercisesRepository.fetch(null, 10);
-            System.out.println(starredExercises.getCount());
+            Cursor starredExercises = starredExercisesRepository.fetch(null, sharedPreferences.getInt(SharedIndexes.loggedUserIdKey, 0));
+
             if (starredExercises.getCount() != 0) {
 
-                while (!starredExercises.isLast()) {
+                while (starredExercises.moveToNext()) {
                     Exercise found = response.stream()
                             .filter(exercise -> exercise.getId().equals(starredExercises.getInt(0)))
                             .peek(res -> System.out.println(res))
@@ -65,7 +68,6 @@ public class StarredExercisesFragment extends Fragment {
                     if (found != null) {
                         exercises.add(found);
                     };
-                    starredExercises.moveToNext();
                 }
                 ExerciseAdapter adapter = new ExerciseAdapter( this.getActivity(), exercises, null);
                 recyclerView.setAdapter(adapter);

@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.app.workout_app.constants.SharedIndexes;
 import com.app.workout_app.databinding.ActivityExercisesBinding;
 import com.app.workout_app.ui.LoginFragment;
 
@@ -53,11 +54,12 @@ public class ExercisesActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.logout) {
-            SharedPreferences preferences = getSharedPreferences("loggedUser", Context.MODE_PRIVATE);
-            if (preferences.getString("name", "") != null) {
+            SharedPreferences preferences = getSharedPreferences(SharedIndexes.loggedUserIndex, Context.MODE_PRIVATE);
+            if (preferences.getString(SharedIndexes.loggedUserNameKey, "") != null) {
                 SharedPreferences.Editor editor = preferences.edit();
 
-                editor.putString("name", null);
+                editor.putString(SharedIndexes.loggedUserNameKey, null);
+                editor.putInt(SharedIndexes.loggedUserIdKey, 0);
                 editor.apply();
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
