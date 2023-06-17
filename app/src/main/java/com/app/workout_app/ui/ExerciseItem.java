@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.app.workout_app.ExercisesActivity;
+import com.app.workout_app.constants.SharedIndexes;
 import com.app.workout_app.databinding.FragmentExerciseItemBinding;
 import com.app.workout_app.repository.StarredExercisesRepository;
 import com.app.workout_app.services.ExerciseService;
@@ -37,7 +38,7 @@ public class ExerciseItem extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         starredExercises = new StarredExercisesRepository(getActivity().getBaseContext());
-        exerciseId = Integer.parseInt(this.getActivity().getIntent().getExtras().getString("exerciseId"));
+        exerciseId = Integer.parseInt(this.getActivity().getIntent().getExtras().getString(SharedIndexes.intentExerciseId));
 
         Cursor fetchedCursor = starredExercises.fetch(exerciseId, 10);
 

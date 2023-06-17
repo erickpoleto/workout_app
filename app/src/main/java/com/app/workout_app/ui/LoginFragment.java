@@ -17,6 +17,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.app.workout_app.ExercisesActivity;
 import com.app.workout_app.MainActivity;
 import com.app.workout_app.R;
+import com.app.workout_app.constants.SharedIndexes;
 import com.app.workout_app.databinding.FragmentLoginBinding;
 import com.app.workout_app.models.Auth;
 import com.app.workout_app.models.User;
@@ -43,9 +44,9 @@ public class LoginFragment extends Fragment {
 
         usernameED = (EditText) binding.editTextTextPersonName;
         passwordED = (EditText) binding.editTextTextPassword;
-        SharedPreferences preferences = this.getActivity().getSharedPreferences("loggedUser", Context.MODE_PRIVATE);
+        SharedPreferences preferences = this.getActivity().getSharedPreferences(SharedIndexes.loggedUserIndex, Context.MODE_PRIVATE);
 
-        if (!preferences.getString("name", "").isEmpty()) {
+        if (!preferences.getString(SharedIndexes.loggedUserNameKey, "").isEmpty()) {
             Intent i = new Intent(this.getActivity(), ExercisesActivity.class);
             startActivity(i);
         }
@@ -61,7 +62,7 @@ public class LoginFragment extends Fragment {
                     response -> {
                     if (response != null) {
                         SharedPreferences.Editor editor = preferences.edit();
-                        editor.putString("name", response.getName());
+                        editor.putString(SharedIndexes.loggedUserNameKey, response.getName());
                         editor.apply();
                         Intent i = new Intent(this.getActivity(), ExercisesActivity.class);
                         startActivity(i);

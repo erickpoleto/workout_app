@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.app.workout_app.constants.Envs;
 import com.app.workout_app.models.Auth;
 import com.app.workout_app.models.Exercise;
 import com.app.workout_app.models.RequestExecuted;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 
 public class ExerciseService {
 
-    final String url = "http://10.0.2.2:3000";
+    final String url = Envs.API_URL;
     final String path = "/exercises";
 
 

@@ -21,6 +21,7 @@ import com.android.volley.toolbox.Volley;
 import com.app.workout_app.ExercisesItemActivity;
 import com.app.workout_app.R;
 import com.app.workout_app.adapters.ExerciseAdapter;
+import com.app.workout_app.constants.SharedIndexes;
 import com.app.workout_app.databinding.FragmentExercicesBinding;
 import com.app.workout_app.models.Exercise;
 import com.app.workout_app.models.RecyclerViewInterface;
@@ -48,8 +49,8 @@ public class ExercicesFragment extends Fragment implements RecyclerViewInterface
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SharedPreferences preferences = this.getActivity().getSharedPreferences("loggedUser", Context.MODE_PRIVATE);
-        String defaultValue = preferences.getString("name", "");
+        SharedPreferences preferences = this.getActivity().getSharedPreferences(SharedIndexes.loggedUserIndex, Context.MODE_PRIVATE);
+        String defaultValue = preferences.getString(SharedIndexes.loggedUserNameKey, "");
         binding.textviewFirst.setText("Olá, "+defaultValue);
 
         RecyclerView recyclerView = binding.recyclerView;
@@ -72,8 +73,8 @@ public class ExercicesFragment extends Fragment implements RecyclerViewInterface
     @Override
     public void onItemClicked(int pos) {
         Intent intent = new Intent(this.getActivity(), ExercisesItemActivity.class);
-        intent.putExtra("exerciseId", this.exercises.get(pos).getId().toString());
-        System.out.println(intent.getStringExtra("exerciseId")+this.exercises.get(pos).getId().toString());
+        intent.putExtra(SharedIndexes.intentExerciseId, this.exercises.get(pos).getId().toString());
+        System.out.println(intent.getStringExtra(SharedIndexes.intentExerciseId)+this.exercises.get(pos).getId().toString());
         startActivity(intent);
     }
 }
